@@ -51,6 +51,9 @@ docker_install() {
 python_uv_install() {
   curl -LsSf https://astral.sh/uv/install.sh | sh
   echo "alias python=python3" >>~/.bashrc
+  echo "source $HOME/.local/bin/env" >>~/.bashrc
+  source ~/.bashrc
+
 }
 #echo "alias k=kubectl" >>~/.bashrc
 
