@@ -2,14 +2,15 @@
 #
 #
 user='rfathi'
-sudo apt update
-sudo apt upgrade -y
-echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
-echo "alias h=history" >>~/.bashrc
-sudo apt install tree -y
-# Add vim configuration
-vim_install(){
-
+basic_prep() {
+  sudo apt update
+  sudo apt upgrade -y
+  echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
+  echo "alias h=history" >>~/.bashrc
+  sudo apt install tree -y
+  # Add vim configuration
+}
+vim_install() {
 
   git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
   sh ~/.vim_runtime/install_awesome_vimrc.sh
@@ -28,7 +29,7 @@ nvim_install() {
   sudo apt install curl nodejs npm -y
 }
 # Add Docker's official GPG key:
-docker_install(){
+docker_install() {
   sudo apt-get update
   sudo apt-get install ca-certificates curl -y
   sudo install -m 0755 -d /etc/apt/keyrings
@@ -49,40 +50,43 @@ docker_install(){
 }
 python_uv_install() {
   curl -LsSf https://astral.sh/uv/install.sh | sh
-  echo "alias python=python3" >> ~/.bashrc
+  echo "alias python=python3" >>~/.bashrc
 }
 #echo "alias k=kubectl" >>~/.bashrc
 
 #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
 #sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-menu(){
+menu() {
   echo "
     System update
     *************
-    1: Install vim config
-    2: Install LazyVim
-    3: Install Docker
-    4: Install Kuberntes
-    5: Install python-uv
-    6: Exit
+    1: Basic prepration
+    2: Install vim config
+    3: Install LazyVim
+    4: Install Docker
+    5: Install Kuberntes
+    6: Install python-uv
+    7: Exit
     "
-    read -p "Select your option...> " selection
-    case $selection in
-      1) vim_install ;;
-      2) nvim_install ;;
-      3) docker_install ;;
-      4) kubernetes_install ;;
-      5) python_uv_install ;;
-      6)
-        clear
-        source ~/.bashrc
-        exit ;;
-      *)
-        echo "Invelid Selection"
-        menu 
-        ;;
-    esec 
+  read -p "Select your option...> " selection
+  case $selection in
+  1) basic_prep ;;
+  2) vim_install ;;
+  3) nvim_install ;;
+  4) docker_install ;;
+  5) kubernetes_install ;;
+  6) python_uv_install ;;
+  7)
+    clear
+    source ~/.bashrc
+    exit
+    ;;
+  *)
+    echo "Invelid Selection"
+    menu
+    ;;
+  esac
 
 }
 clear
