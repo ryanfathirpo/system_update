@@ -5,9 +5,13 @@ user='rfathi'
 basic_prep() {
   sudo apt update
   sudo apt upgrade -y
-  echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
-  echo "alias h=history" >>~/.bashrc
-  sudo apt install tree -y
+  if [ ! grep "alias update" ~/.bashrc; then
+    echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
+  fi
+  if ! grep "alias h" ~/.bashrc; then
+    echo "alias h=history" >>~/.bashrc
+  fi
+  sudo apt install tree curl build-essential -y
   # Add vim configuration
 }
 vim_install() {
@@ -31,7 +35,7 @@ nvim_install() {
 # Add Docker's official GPG key:
 docker_install() {
   sudo apt-get update
-  sudo apt-get install ca-certificates curl -y
+  sudo apt-get install ca-certificates -y
   sudo install -m 0755 -d /etc/apt/keyrings
   sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
   sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -55,6 +59,11 @@ python_uv_install() {
   source ~/.bashrc
 
 }
+rust_install() {
+  curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
+  echo 'source "$HOME/.cargo/env" >> ~/.bashrc'
+  source ~/.bashrc
+}
 #echo "alias k=kubectl" >>~/.bashrc
 
 #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -70,7 +79,8 @@ menu() {
     4: Install Docker
     5: Install Kuberntes
     6: Install python-uv
-    7: Exit
+    7: Install rust
+    8: Exit
     "
   read -p "Select your option...> " selection
   case $selection in
@@ -80,7 +90,8 @@ menu() {
   4) docker_install ;;
   5) kubernetes_install ;;
   6) python_uv_install ;;
-  7)
+  7) rust_install ;;
+  8)
     clear
     source ~/.bashrc
     exit
