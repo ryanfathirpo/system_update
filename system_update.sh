@@ -2,19 +2,14 @@
 #
 #
 user='rfathi'
-basic_prep() {
-  sudo apt update
-  sudo apt upgrade -y
-  if [ ! grep "alias update" ~/.bashrc; then
-    echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
-  fi
-  if ! grep "alias h" ~/.bashrc; then
-    echo "alias h=history" >>~/.bashrc
-  fi
-  sudo apt install tree curl build-essential -y
-  # Add vim configuration
-}
-vim_install() {
+sudo apt update
+sudo apt upgrade -y
+echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
+echo "alias h=history" >>~/.bashrc
+sudo apt install tree -y
+# Add vim configuration
+vim_install(){
+
 
   git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
   sh ~/.vim_runtime/install_awesome_vimrc.sh
@@ -33,9 +28,9 @@ nvim_install() {
   sudo apt install curl nodejs npm -y
 }
 # Add Docker's official GPG key:
-docker_install() {
+docker_install(){
   sudo apt-get update
-  sudo apt-get install ca-certificates -y
+  sudo apt-get install ca-certificates curl -y
   sudo install -m 0755 -d /etc/apt/keyrings
   sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
   sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -54,53 +49,59 @@ docker_install() {
 }
 python_uv_install() {
   curl -LsSf https://astral.sh/uv/install.sh | sh
-  echo "alias python=python3" >>~/.bashrc
-  echo "source $HOME/.local/bin/env" >>~/.bashrc
-  source ~/.bashrc
-
+  echo "alias python=python3" >> ~/.bashrc
+  echo "alias ur='uv run'" >> ~/.bashrc
 }
-rust_install() {
-  curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
-  echo 'source "$HOME/.cargo/env" >> ~/.bashrc'
+rust_install(){
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  echo "source \"$HOME/.cargo/env\"" >> ~/.bashrc
   source ~/.bashrc
+}
+# Install git if it installed, configure git
+git_config(){
+  if ! command -v git &>/dev/null ; then
+    sudo apt update
+    sudo apt install git 
+  fi
+  git config --global user.name ryanfathirpo
+  git config --global user.email "rf13430916@gmail.com"
 }
 #echo "alias k=kubectl" >>~/.bashrc
 
 #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
 #sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-menu() {
+menu(){
   echo "
     System update
     *************
-    1: Basic prepration
-    2: Install vim config
-    3: Install LazyVim
-    4: Install Docker
-    5: Install Kuberntes
-    6: Install python-uv
-    7: Install rust
+    1: Install vim config
+    2: Install LazyVim
+    3: Install Docker
+    4: Install Kuberntes
+    5: Install python-uv
+    6: Install rust
+    7: Setup git
     8: Exit
     "
-  read -p "Select your option...> " selection
-  case $selection in
-  1) basic_prep ;;
-  2) vim_install ;;
-  3) nvim_install ;;
-  4) docker_install ;;
-  5) kubernetes_install ;;
-  6) python_uv_install ;;
-  7) rust_install ;;
-  8)
-    clear
-    source ~/.bashrc
-    exit
-    ;;
-  *)
-    echo "Invelid Selection"
-    menu
-    ;;
-  esac
+    read -p "Select your option...> " selection
+    case $selection in
+      1) vim_install ;;
+      2) nvim_install ;;
+      3) docker_install ;;
+      4) kubernetes_install ;;
+      5) python_uv_install ;;
+      6) rust_install() ;;
+      7) git_config() ;;
+      8)
+        clear
+        source ~/.bashrc
+        exit ;;
+      *)
+        echo "Invelid Selection"
+        menu 
+        ;;
+    esec 
 
 }
 clear
