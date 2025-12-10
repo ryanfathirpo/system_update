@@ -8,8 +8,7 @@ echo "alias update='sudo apt update && sudo apt upgrade -y'" >>~/.bashrc
 echo "alias h=history" >>~/.bashrc
 sudo apt install tree -y
 # Add vim configuration
-vim_install(){
-
+vim_install() {
 
   git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
   sh ~/.vim_runtime/install_awesome_vimrc.sh
@@ -28,7 +27,7 @@ nvim_install() {
   sudo apt install curl nodejs npm -y
 }
 # Add Docker's official GPG key:
-docker_install(){
+docker_install() {
   sudo apt-get update
   sudo apt-get install ca-certificates curl -y
   sudo install -m 0755 -d /etc/apt/keyrings
@@ -49,19 +48,19 @@ docker_install(){
 }
 python_uv_install() {
   curl -LsSf https://astral.sh/uv/install.sh | sh
-  echo "alias python=python3" >> ~/.bashrc
-  echo "alias ur='uv run'" >> ~/.bashrc
+  echo "alias python=python3" >>~/.bashrc
+  echo "alias ur='uv run'" >>~/.bashrc
 }
-rust_install(){
+rust_install() {
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  echo "source \"$HOME/.cargo/env\"" >> ~/.bashrc
+  echo "source \"$HOME/.cargo/env\"" >>~/.bashrc
   source ~/.bashrc
 }
 # Install git if it installed, configure git
-git_config(){
-  if ! command -v git &>/dev/null ; then
+git_config() {
+  if ! command -v git &>/dev/null; then
     sudo apt update
-    sudo apt install git 
+    sudo apt install git
   fi
   git config --global user.name ryanfathirpo
   git config --global user.email "rf13430916@gmail.com"
@@ -71,7 +70,7 @@ git_config(){
 #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
 #sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-menu(){
+menu() {
   echo "
     System update
     *************
@@ -84,24 +83,25 @@ menu(){
     7: Setup git
     8: Exit
     "
-    read -p "Select your option...> " selection
-    case $selection in
-      1) vim_install ;;
-      2) nvim_install ;;
-      3) docker_install ;;
-      4) kubernetes_install ;;
-      5) python_uv_install ;;
-      6) rust_install() ;;
-      7) git_config() ;;
-      8)
-        clear
-        source ~/.bashrc
-        exit ;;
-      *)
-        echo "Invelid Selection"
-        menu 
-        ;;
-    esec 
+  read -p "Select your option...> " selection
+  case $selection in
+  1) vim_install ;;
+  2) nvim_install ;;
+  3) docker_install ;;
+  4) kubernetes_install ;;
+  5) python_uv_install ;;
+  6) rust_install ;;
+  7) git_config ;;
+  8)
+    clear
+    source ~/.bashrc
+    exit
+    ;;
+  *)
+    echo "Invelid Selection"
+    menu
+    ;;
+  esac
 
 }
 clear
