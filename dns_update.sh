@@ -4,7 +4,7 @@
 get_local_ips() {
   # Try ip command first (Linux)
   if command -v ip &>/dev/null; then
-    ip -4 addr show | grep -E 'inet ' | awk '{print $2}' | cut -d/ -f1 | grep -E '10\.' # If you want all the addresses use: grep -v '^127\.' anything but 127
+    ip -4 addr show | grep -E 'inet ' | awk '{print $2}' | cut -d/ -f1 | grep -e '10\.6\.53\.' -e '10\.7\.31\.' # If you want all the addresses use: grep -v '^127\.' anything but 127
   # Fallback to ifconfig (macOS/BSD)
   elif command -v ifconfig &>/dev/null; then
     ifconfig | grep -E 'inet ' | grep -E '10\.' | awk '{print $2}'
